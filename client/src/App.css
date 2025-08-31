@@ -1,3 +1,6 @@
+*{
+  box-sizing: border-box;
+}
 body{
   color: #222;
 }
@@ -58,4 +61,46 @@ div.post p.info{
 div.post p.info a.author{
   color:#333;
   text-decoration: none;
+}
+
+div.post p.summary{
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+
+
+/* login and register form */
+
+form.login, form.register{
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input{
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+button{
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  background-color: #222;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+form h1{
+  text-align: center;
+
 }
