@@ -31,18 +31,22 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  const {username,password} = req.body;
-  const userDoc = await User.findOne({username});
-  const passOk = bcrypt.compare(password, userDoc.password);
-  if(passOk){
-    //logged in
-    jwt.sign({username,id:userDoc._id}, secret, {}, (err,token) => {
-      if(err) throw err;
-      res.cookie('token', token).json('ok');
-    });
-  } else {
-    res.status(400).json('wrong credentials');
+  const { username, password } = req.body;
+  
+  const userDoc = await User.findOne({ username });
+  if (!userDoc) {
+    return res.status(404).json({ message: "User not found" });
   }
+
+  const passOk = await bcrypt.compare(password, userDoc.password);
+  if (!passOk) {
+    return res.status(400).json({ message: "Wrong credentials" });
+  }
+
+  jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
+    if (err) throw err;
+    res.cookie("token", token).json("ok");
+  });
 });
 
 
