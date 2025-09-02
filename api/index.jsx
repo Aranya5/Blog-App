@@ -6,12 +6,14 @@ const mongoose = require("mongoose");
 const User = require("./models/User");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cookieParser = require("cookie-parser");
 
 const salt = bcrypt.genSaltSync(10);
 const secret = 'asdasdasdasdasd';
 
 app.use(cors({credentials:true, origin:'http://localhost:5173'}));
 app.use(express.json());
+app.use(cookieParser());
 
 mongoose.connect(
   "mongodb+srv://basuaranya5_db_user:WXIbCnlZldHTZqcu@cluster0.wi6zwwy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -45,10 +47,32 @@ app.post("/login", async (req, res) => {
 
   jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
     if (err) throw err;
-    res.cookie("token", token).json("ok");
+    res.cookie("token", token).json({
+      id: userDoc._id,
+      username, 
+    });
   });
 });
 
+app.get("/profile", (req, res) => {
+  const { token } = req.cookies;
+  if (token) {
+    jwt.verify(token, secret, {}, (err, info) => {
+      if (err) throw err;
+      res.json(info);
+    });
+  } else {
+    res.status(401).json("No token");
+  }
+  res.json(req.cookies);
+});
+
+app.post("/logout", (req, res) => {
+  res.cookie("token", "").json({
+    id: userDoc._id,
+    username
+  });
+});
 
 
 app.listen(4000, () => {
