@@ -4,9 +4,13 @@ app.use(express.json());
 const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/User");
+const Post = require("./models/Post");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require("cookie-parser");
+const multer = require('multer');
+const uploadMiddleware = multer({dest:'uploads/'});
+const fs = require('fs');
 
 const salt = bcrypt.genSaltSync(10);
 const secret = 'asdasdasdasdasd';
@@ -74,6 +78,23 @@ app.post("/logout", (req, res) => {
   });
 });
 
+app.post("/post",uploadMiddleware.single('file'), async (req, res) => {
+  const {originalname, path} = req.file;
+  const parts = originalname.split('.');
+  const ext = parts[parts.length - 1];
+  const newPath = path + '.' + ext;
+  fs.renameSync(path, newPath);
+
+  const {title, summary, content} = req.body;
+  const postDoc = await Post.create({
+    title,
+    summary,
+    content,
+    cover: newPath,
+  });
+
+  res.json(postDoc);
+  });
 
 app.listen(4000, () => {
   console.log("Server running on http://localhost:4000");
