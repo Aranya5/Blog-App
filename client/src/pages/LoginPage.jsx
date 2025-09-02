@@ -1,16 +1,26 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [redirect, setRedirect] = useState(false);
   async function login(ev) {
     ev.preventDefault();
-    await fetch("http://localhost:4000/login", {
+    const response = await fetch("http://localhost:4000/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
       credentials: "include",
     });
+    if (response.ok) {
+      setRedirect(true);
+    } else {
+      alert("Login failed");
+    }
+  }
+  if (redirect) {
+    return <Navigate to={"/"} />;
   }
   return (
     <>
@@ -19,8 +29,8 @@ function LoginPage() {
         <input
           type="text"
           placeholder="username"
-          valuue={username}
-          onChange={(ev) => setUsername(ev.target.valueAsDate)}
+          value={username}
+          onChange={(ev) => setUsername(ev.target.value)}
         />
 
         <input
