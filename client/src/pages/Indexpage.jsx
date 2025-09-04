@@ -10,6 +10,7 @@ function IndexPage() {
       });
     });
   }, []);
-  return <>{posts.length > 0 && posts.map((post) => <Post key={post._id} post={post} />)}</>;
+  console.log(posts);
+  return <>{posts.length > 0 && posts.map((post) => <Post key={post._id} {...post} />)}</>;
 }
 export default IndexPage;

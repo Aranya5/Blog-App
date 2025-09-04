@@ -1,6 +1,13 @@
 import { formatISO9075 } from "date-fns";
 
 function Post({ title, summary, cover, content, createdAt, author }) {
+  console.log({
+    title,
+    summary,
+    cover,
+    content,
+    author,
+  });
   return (
     <div className="post">
       <div className="image">
