@@ -18,6 +18,7 @@ const secret = 'asdasdasdasdasd';
 app.use(cors({credentials:true, origin:'http://localhost:5173'}));
 app.use(express.json());
 app.use(cookieParser());
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 mongoose.connect(
   "mongodb+srv://basuaranya5_db_user:WXIbCnlZldHTZqcu@cluster0.wi6zwwy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -85,18 +86,28 @@ app.post("/post",uploadMiddleware.single('file'), async (req, res) => {
   const newPath = path + '.' + ext;
   fs.renameSync(path, newPath);
 
-  const {title, summary, content} = req.body;
-  const postDoc = await Post.create({
+  const { token } = req.cookies;
+  jwt.verify(token, secret, {}, async (err, info) => {
+    if (err) throw err;
+     const {title, summary, content} = req.body;
+    const postDoc = await Post.create({
     title,
     summary,
     content,
     cover: newPath,
+    author: info.id,
   });
 
   res.json(postDoc);
   });
-
-app.listen(4000, () => {
-  console.log("Server running on http://localhost:4000");
 });
 
+  app.get("/post", async (req, res) => {
+    res.json(await Post.find().populate('author', ['username']).sort({createdAt: -1}).limit(20));
+    // console.log(await Post.find().populate('author', ['username']));
+
+  });
+
+app.listen(4000, () => {
+  console.log("Server running on http://localhost:4000")
+});
