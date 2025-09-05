@@ -11,6 +11,11 @@ function IndexPage() {
     });
   }, []);
   console.log(posts);
-  return <>{posts.length > 0 && posts.map((post) => <Post key={post._id} {...post} />)}</>;
+  return (
+    <>
+      {posts.length > 0 &&
+        posts.map((post) => <Post key={post._id} {...post} />)}
+    </>
+  );
 }
 export default IndexPage;

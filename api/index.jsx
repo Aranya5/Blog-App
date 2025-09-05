@@ -108,6 +108,13 @@ app.post("/post",uploadMiddleware.single('file'), async (req, res) => {
 
   });
 
+
+  app.get("/post/:id", async (req, res) => {
+    const {id} = req.params;
+    const postDoc = await Post.findById(id).populate('author', ['username']);
+    res.json(postDoc);
+  });
+
 app.listen(4000, () => {
   console.log("Server running on http://localhost:4000")
 });
