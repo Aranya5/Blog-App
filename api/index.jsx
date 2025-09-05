@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-app.use(express.json());
 const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/User");
@@ -11,18 +10,18 @@ const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
+require("dotenv").config();
+
 
 const salt = bcrypt.genSaltSync(10);
-const secret = "asdasdasdasdasd";
+const secret = process.env.JWT_SECRET;
 
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-mongoose.connect(
-  "mongodb+srv://basuaranya5_db_user:WXIbCnlZldHTZqcu@cluster0.wi6zwwy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
+mongoose.connect(process.env.MONGODB_URI);
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -70,7 +69,6 @@ app.get("/profile", (req, res) => {
   } else {
     res.status(401).json("No token");
   }
-  res.json(req.cookies);
 });
 
 app.post("/logout", (req, res) => {
@@ -157,6 +155,7 @@ app.get("/post/:id", async (req, res) => {
   res.json(postDoc);
 });
 
-app.listen(4000, () => {
-  console.log("Server running on http://localhost:4000");
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
