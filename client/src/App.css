@@ -1,6 +1,11 @@
 *{
   box-sizing: border-box;
 }
+
+a{
+  cursor: pointer ;
+}
+
 body{
   color: #222;
 }
@@ -103,6 +108,7 @@ input{
 }
 
 button{
+  cursor: pointer;
   padding: 10px;
   font-size: 1rem;
   border: none;
@@ -149,4 +155,16 @@ div.post-page div.author{
 div.post-page div.content{
   line-height: 1.6;
   font-size: 1.1rem;
+}
+
+a.edit-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  padding: 6px 10px;
+  background-color: #222;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
 }
